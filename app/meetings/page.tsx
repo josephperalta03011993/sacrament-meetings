@@ -1,10 +1,19 @@
 import MeetingCard from "@/components/MeetingCard";
 import { SacramentMeeting } from "@/lib/types";
+import { headers } from "next/headers";
 
 export default async function MeetingsPage() {
-  const response = await fetch("http://localhost:3000/api/meetings", {
-    cache: "no-store",
-  });
+  const headersList = await headers();
+  const host = headersList.get("host");
+
+  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+
+  const response = await fetch(
+    `${protocol}://${host}/api/meetings`,
+    {
+      cache: "no-store",
+    }
+  );
 
   const meetings: SacramentMeeting[] = await response.json();
 
