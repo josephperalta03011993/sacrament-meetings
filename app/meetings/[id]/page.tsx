@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import MeetingDetail from "@/components/MeetingDetail";
 
 interface MeetingPageProps {
@@ -8,8 +9,14 @@ interface MeetingPageProps {
 export default async function MeetingPage({ params }: MeetingPageProps) {
   const { id } = await params;
 
+  const headersList = await headers();
+  const host = headersList.get("host");
+
+  const protocol =
+    process.env.NODE_ENV === "development" ? "http" : "https";
+
   const response = await fetch(
-    `http://localhost:3000/api/meetings/${id}`,
+    `${protocol}://${host}/api/meetings/${id}`,
     {
       cache: "no-store",
     }

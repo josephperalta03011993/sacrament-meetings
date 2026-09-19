@@ -6,7 +6,8 @@ export default async function MeetingsPage() {
   const headersList = await headers();
   const host = headersList.get("host");
 
-  const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+  const protocol =
+    process.env.NODE_ENV === "development" ? "http" : "https";
 
   const response = await fetch(
     `${protocol}://${host}/api/meetings`,
