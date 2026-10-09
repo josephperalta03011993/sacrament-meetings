@@ -1,5 +1,7 @@
+
 "use server";
 
+import { auth } from "@/auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -32,6 +34,14 @@ export type State = {
   };
 };
 
+async function requireAuth() {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/login");
+  }
+}
+
 function getFormData(formData: FormData) {
   return {
     date: String(formData.get("date") ?? ""),
@@ -47,6 +57,8 @@ export async function createMeeting(
   _prevState: State,
   formData: FormData
 ): Promise<State> {
+  await requireAuth();
+
   const validatedFields = MeetingFormSchema.safeParse(
     getFormData(formData)
   );
@@ -66,7 +78,6 @@ export async function createMeeting(
         number: 0,
         title: "",
       },
-      openingPrayer: validatedFields.data.openingPrayer,
       wardBusiness: [],
       stakeBusiness: false,
       sacramentHymn: {
@@ -78,7 +89,6 @@ export async function createMeeting(
         number: 0,
         title: "",
       },
-      closingPrayer: validatedFields.data.closingPrayer,
     });
   } catch (error) {
     console.error("Failed to create meeting:", error);
@@ -97,6 +107,8 @@ export async function updateMeeting(
   _prevState: State,
   formData: FormData
 ): Promise<State> {
+  await requireAuth();
+
   const validatedFields = MeetingFormSchema.safeParse(
     getFormData(formData)
   );
@@ -126,6 +138,8 @@ export async function updateMeeting(
 }
 
 export async function deleteMeeting(id: number) {
+  await requireAuth();
+
   try {
     await deleteMeetingDb(id);
   } catch (error) {

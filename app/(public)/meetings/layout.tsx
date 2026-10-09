@@ -1,4 +1,12 @@
+
+import type { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Meeting Schedule",
+  description:
+    "View upcoming and current sacrament meeting schedules and programs.",
+};
 
 export default function MeetingsLayout({
   children,

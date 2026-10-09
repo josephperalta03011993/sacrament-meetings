@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -10,9 +11,25 @@ const geist = Geist({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "Sacrament Meeting Planner",
-  description: "Plan and view sacrament meeting programs",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Sacrament Meeting Planner",
+    template: "%s | Sacrament Meeting Planner",
+  },
+  description:
+    "Plan, manage, and view sacrament meeting schedules and programs.",
+  openGraph: {
+    title: "Sacrament Meeting Planner",
+    description:
+      "Plan, manage, and view sacrament meeting schedules and programs.",
+    siteName: "Sacrament Meeting Planner",
+    type: "website",
+    url: siteUrl,
+  },
 };
 
 export default function RootLayout({
